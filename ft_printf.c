@@ -6,11 +6,76 @@
 /*   By: duamarqu <duamarqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 09:41:13 by duamarqu          #+#    #+#             */
-/*   Updated: 2023/11/03 16:03:18 by duamarqu         ###   ########.fr       */
+/*   Updated: 2023/11/04 20:13:13 by duamarqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+
+#include "ft_printf.h"
+
+int	print_char(char c)
+{
+	return (write(1, &c, 1));
+}
+
+int	print_string(char *str)
+{
+	int	count;
+
+	count = 0;
+	if (str == NULL)
+		str = "(null)";
+	while (*str)
+		count += write(1, str++, 1);
+	return (count);
+}
+
+int	print_digit(long long i, int base, char *str)
+{
+	int		count;
+
+	count = 0;
+	if (i < 0)
+	{
+		write(1, "-", 1);
+		return (print_digit(-i, base, str) + 1);
+	}
+	else if (i < (long long)base)
+		return (count + print_char(str[i]));
+	else
+	{
+		count += print_digit(i / base, base, str);
+		count += print_digit(i % base, base, str);
+	}
+	return (count);
+}
+
+int	print_pointer(unsigned long i, int base, char *str, int id)
+{
+	int		count;
+
+	count = 0;
+	if (id == 2)
+	{
+		if (i == 0)
+			return (write(1, "(nil)", 5));
+		count += write(1, "0x", 2);
+	}
+	if (i < 0)
+	{
+		write(1, "-", 1);
+		return (print_pointer(-i, base, str, 0) + 1);
+	}
+	else if (i < (unsigned long)base)
+		return (count + print_char(str[i]));
+	else
+	{
+		count += print_pointer(i / base, base, str, 0);
+		count += print_pointer(i % base, base, str, 0);
+	}
+	return (count);
+}
 
 int	ft_printf_format(char specifier, va_list ap)
 {
@@ -19,7 +84,7 @@ int	ft_printf_format(char specifier, va_list ap)
 	count = 0;
 	if (specifier == 'c')
 		count += print_char(va_arg(ap, int));
-	else if (specifier == 's' || specifier == 'c')
+	else if (specifier == 's')
 		count += print_string(va_arg(ap, char *));
 	else if (specifier == '%')
 		count += print_char('%');

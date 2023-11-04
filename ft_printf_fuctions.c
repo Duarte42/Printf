@@ -6,7 +6,7 @@
 /*   By: duamarqu <duamarqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 15:05:29 by duamarqu          #+#    #+#             */
-/*   Updated: 2023/11/03 16:06:14 by duamarqu         ###   ########.fr       */
+/*   Updated: 2023/11/04 20:15:48 by duamarqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,7 @@ int	print_pointer(unsigned long i, int base, char *str, int id)
 			return (write(1, "(nil)", 5));
 		count += write(1, "0x", 2);
 	}
-	if (i < 0)
-	{
-		write(1, "-", 1);
-		return (print_pointer(-i, base, str, 0) + 1);
-	}
-	else if (i < (unsigned long)base)
+	if (i < (unsigned long)base)
 		return (count + print_char(str[i]));
 	else
 	{
